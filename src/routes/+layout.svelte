@@ -1,5 +1,5 @@
 <script>
-import Link from "./link.svelte";
+import Link from "../lib/link.svelte";
 </script>
 
 <header></header>
@@ -24,5 +24,6 @@ import Link from "./link.svelte";
     display: flex; 
     column-gap:5px;
     justify-content: center;
+    margin-bottom: 30px;
   }
 </style>
