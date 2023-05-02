@@ -20,10 +20,13 @@ let vis=false
 
 
 let bodyRect
-let xPosition
-let yPosition
+let xPosition=0
+let yPosition=0
+let underline
 
-
+$:{
+  console.log(xPosition,yPosition)
+}
   onMount(()=>{
     vis=true
   })
@@ -32,11 +35,13 @@ function moveUnderline(node, {
     xPosDes,
     yPosDes,
     duration
+
+    
   }) {
     return {
       duration,
       css: t => {
-        const ease = linear(t) * 0.5
+        const ease = linear(t)
 
         return `
           left:${xPosDes*ease}px;
@@ -66,13 +71,14 @@ function getOffset(el) {
   };
 }
 
-//
+//in:moveUnderline="{{xPosDes:500,yPosDes:5,duration:2000}}"
 </script>
 
 <main>
     <div class="buttonHolder" id="holder">
       {#if vis===true}
-        <div class="sexyUnderline" id="coolUnderline" bind:offsetWidth={xPosition} bind:offsetHeight={yPosition} in:moveUnderline="{{xPosDes:500,yPosDes:5,duration:200}}" ></div>
+        <div class="sexyUnderline" style="left:0px; top:0px" id="coolUnderline" bind:this={underline}
+        in:moveUnderline="{{xPosDes:500,yPosDes:0,duration:10000}}"></div>
       {/if}
         {#each buttonshit as leButton}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -108,8 +114,6 @@ function getOffset(el) {
   width: 20px;
   height: 2px;
   background-color: black;
-  left: 500px;
-  bottom: 0;
 }
 
 @keyframes moveTo {
