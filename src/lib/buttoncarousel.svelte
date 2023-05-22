@@ -19,39 +19,57 @@ let selectedButton = buttonshit[0];
 let vis=false
 
 
-let bodyRect
-let xPosition=0
-let yPosition=0
+
 let underline
 
-$:{
-  console.log(xPosition,yPosition)
-}
-  onMount(()=>{
-    vis=true
+let buttonPos=[
+
+]
+
+
+function AssignPos(node){
+
+  var rect=node.getBoundingClientRect()
+  buttonPos.push({
+    id:node.id,
+    yposition:(rect.left + rect.right)/2
   })
 
-function moveUnderline(node, {
-    xPosDes,
-    yPosDes,
-    duration
+}
 
-    
-  }) {
-    return {
-      duration,
-      css: t => {
-        const ease = linear(t)
+  let left=0
+  onMount(()=>{
+    vis=true
 
+    setTimeout(() => {
+      left = 540;
+    }, 0);
+  })
+
+  function moveUnderline(node, { xPosDes, duration }) {
+  return {
+    duration,
+    css: (t) => {
+      const ease = linear(t);
+
+      const left = xPosDes * ease;
+      
+
+      if (t === 1) {
+        // Set final styles when the animation is complete
+        console.log("FINAL YEYEYYEYEYEY")
+        
         return `
-          left:${xPosDes*ease}px;
-          top:${yPosDes*ease}px;
-        `
+          left: ${xPosDes}px;
+        `;
       }
-    }
 
-  }
-
+      return `
+        left: ${left}px;
+      `;
+    },
+  };
+}
 const handleClick = (e) => {
   for (let index = 0; index < buttonshit.length; index++) {
     const element = buttonshit[index];
@@ -59,6 +77,8 @@ const handleClick = (e) => {
       selectedButton = element
     }
   }
+
+  console.log(buttonPos)
 
   
 }
@@ -71,18 +91,22 @@ function getOffset(el) {
   };
 }
 
-//in:moveUnderline="{{xPosDes:500,yPosDes:5,duration:2000}}"
+
+
 </script>
 
 <main>
-    <div class="buttonHolder" id="holder">
-      {#if vis===true}
-        <div class="sexyUnderline" style="left:0px; top:0px" id="coolUnderline" bind:this={underline}
-        in:moveUnderline="{{xPosDes:500,yPosDes:0,duration:10000}}"></div>
+  {#if vis===true}
+        <div class="sexyUnderline" id="coolUnderline" in:moveUnderline="{{xPosDes:540, duration:3000}}" bind:this={underline}
+        ></div>
       {/if}
+    <div class="buttonHolder" id="holder">
+      
         {#each buttonshit as leButton}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="carouselButton" id={leButton.blogName} on:click={(e)=>{handleClick(e)}} class:selectedButt={leButton.blogName === selectedButton.blogName}>{leButton.buttonName}</div>
+        <div class="carouselButton" id={leButton.blogName} on:click={(e)=>{handleClick(e)}} class:selectedButt={leButton.blogName === selectedButton.blogName} use:AssignPos>
+          {leButton.buttonName}
+        </div>
         {/each}
     </div>
 
@@ -114,12 +138,20 @@ function getOffset(el) {
   width: 20px;
   height: 2px;
   background-color: black;
+  z-index: 10000000;
+  /* animation-name: moveTo;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear; */
 }
 
 @keyframes moveTo {
   0% {
-    left: 0;
-    top: 0%
+    left: 0px;
+  }
+
+  100%{
+    left: 100px
   }
 
 }
