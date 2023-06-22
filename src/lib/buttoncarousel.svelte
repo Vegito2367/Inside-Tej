@@ -55,18 +55,15 @@ function AssignPos(node){
       const left = xPosDes * ease;
       
 
-      if (t === 1) {
-        // Set final styles when the animation is complete
-        console.log("FINAL YEYEYYEYEYEY")
-        
-        return `
-          left: ${xPosDes}px;
-        `;
-      }
+      // Calculate the final position
+      const finalLeft = xPosDes;
+
+      // Apply final styles progressively as the animation progresses
+      const currentLeft = left + (finalLeft - left) * t;
 
       return `
-        left: ${left}px;
-      `;
+        left: ${currentLeft}px;
+        `
     },
   };
 }
